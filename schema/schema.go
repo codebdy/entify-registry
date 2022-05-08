@@ -1,34 +1,38 @@
-package main
+package schema
 
-import "github.com/graphql-go/graphql"
+import (
+	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify-schema-registry/consts"
+	"rxdrag.com/entify-schema-registry/repository"
+)
 
 var serviceType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Service",
 		Fields: graphql.Fields{
-			ID: &graphql.Field{
+			consts.ID: &graphql.Field{
 				Type: graphql.Int,
 			},
-			NAME: &graphql.Field{
+			consts.NAME: &graphql.Field{
 				Type: graphql.String,
 			},
-			URL: &graphql.Field{
+			consts.URL: &graphql.Field{
 				Type: graphql.String,
 			},
-			TYPE_DEFS: &graphql.Field{
+			consts.TYPE_DEFS: &graphql.Field{
 				Type:        graphql.String,
 				Description: "Service types",
 			},
-			IS_ALIVE: &graphql.Field{
+			consts.IS_ALIVE: &graphql.Field{
 				Type: graphql.Boolean,
 			},
-			VERSION: &graphql.Field{
+			consts.VERSION: &graphql.Field{
 				Type: graphql.String,
 			},
-			ADDED_TIME: &graphql.Field{
+			consts.ADDED_TIME: &graphql.Field{
 				Type: graphql.DateTime,
 			},
-			UPDATED_TIME: &graphql.Field{
+			consts.UPDATED_TIME: &graphql.Field{
 				Type: graphql.DateTime,
 			},
 		},
@@ -36,7 +40,7 @@ var serviceType = graphql.NewObject(
 	},
 )
 
-func createSchema() (graphql.Schema, error) {
+func CreateSchema() (graphql.Schema, error) {
 	fields := graphql.Fields{
 		"services": &graphql.Field{
 			Type: &graphql.NonNull{
@@ -45,7 +49,7 @@ func createSchema() (graphql.Schema, error) {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return getServices(), nil
+				return repository.GetServices(), nil
 			},
 		},
 	}

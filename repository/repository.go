@@ -1,4 +1,4 @@
-package main
+package repository
 
 import "time"
 
@@ -13,7 +13,7 @@ type Service struct {
 	updatedTime time.Time
 }
 
-func getServices() []Service {
+func GetServices() []Service {
 	var services = []Service{}
 
 	return services

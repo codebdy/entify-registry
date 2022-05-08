@@ -45,7 +45,7 @@ func createSchema() (graphql.Schema, error) {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "world", nil
+				return getServices(), nil
 			},
 		},
 	}

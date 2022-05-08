@@ -23,8 +23,7 @@ var serviceType = graphql.NewObject(
 				Type: graphql.String,
 			},
 			consts.TYPE_DEFS: &graphql.Field{
-				Type:        graphql.String,
-				Description: "Service types",
+				Type: graphql.String,
 			},
 			consts.IS_ALIVE: &graphql.Field{
 				Type: graphql.Boolean,

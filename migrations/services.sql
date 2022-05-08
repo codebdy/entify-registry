@@ -2,6 +2,7 @@ CREATE TABLE `services` (
   `id` int unsigned NOT NULL,
   `name` varchar(500) DEFAULT NULL,
   `url` varchar(500) DEFAULT NULL,
+  `serviceType` varchar(100) DEFAULT NULL,
   `typeDefs` longtext,
   `version` varchar(100) DEFAULT NULL,
   `isAlive` tinyint(1) DEFAULT NULL,

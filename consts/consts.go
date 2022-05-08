@@ -5,6 +5,7 @@ var (
 	TYPE_DEFS    = "typeDefs"
 	NAME         = "name"
 	URL          = "url"
+	SERVICETYPE  = "serviceType"
 	IS_ALIVE     = "isAlive"
 	VERSION      = "version"
 	ADDED_TIME   = "addedTime"

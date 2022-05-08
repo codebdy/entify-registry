@@ -6,6 +6,7 @@ type Service struct {
 	Id          uint      `json:"id"`
 	Name        string    `json:"name"`
 	Url         string    `json:"url"`
+	ServiceType string    `json:"serviceType"`
 	TypeDefs    string    `json:"tpeDefs"`
 	IsAlive     bool      `json:"isAlive"`
 	Version     string    `json:"version"`

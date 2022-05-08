@@ -19,6 +19,9 @@ var serviceType = graphql.NewObject(
 			consts.URL: &graphql.Field{
 				Type: graphql.String,
 			},
+			consts.SERVICETYPE: &graphql.Field{
+				Type: graphql.String,
+			},
 			consts.TYPE_DEFS: &graphql.Field{
 				Type:        graphql.String,
 				Description: "Service types",

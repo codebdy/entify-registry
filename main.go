@@ -6,23 +6,12 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"rxdrag.com/entify-schema-registry/authentication"
 )
 
 func main() {
-	fields := graphql.Fields{
-		"hello": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "world", nil
-			},
-		},
-	}
-	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
-	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
-	schema, err := graphql.NewSchema(schemaConfig)
+	schema, err := createSchema()
 	if err != nil {
 		log.Fatalf("failed to create new schema, error: %v", err)
 	}

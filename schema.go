@@ -19,6 +19,18 @@ var serviceType = graphql.NewObject(
 				Type:        graphql.String,
 				Description: "Service types",
 			},
+			IS_ALIVE: &graphql.Field{
+				Type: graphql.Boolean,
+			},
+			VERSION: &graphql.Field{
+				Type: graphql.String,
+			},
+			ADDED_TIME: &graphql.Field{
+				Type: graphql.DateTime,
+			},
+			UPDATED_TIME: &graphql.Field{
+				Type: graphql.DateTime,
+			},
 		},
 		Description: "Service type",
 	},
@@ -27,7 +39,11 @@ var serviceType = graphql.NewObject(
 func createSchema() (graphql.Schema, error) {
 	fields := graphql.Fields{
 		"services": &graphql.Field{
-			Type: graphql.String,
+			Type: &graphql.NonNull{
+				OfType: &graphql.List{
+					OfType: serviceType,
+				},
+			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				return "world", nil
 			},

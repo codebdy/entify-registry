@@ -3,14 +3,14 @@ package repository
 import "time"
 
 type Service struct {
-	id          uint
-	name        string
-	url         string
-	typeDefs    string
-	isAlive     bool
-	version     string
-	addedTime   time.Time
-	updatedTime time.Time
+	Id          uint      `json:"id"`
+	Name        string    `json:"name"`
+	Url         string    `json:"url"`
+	TypeDefs    string    `json:"tpeDefs"`
+	IsAlive     bool      `json:"isAlive"`
+	Version     string    `json:"version"`
+	AddedTime   time.Time `json:"addedTime"`
+	UpdatedTime time.Time `json:"updatedTime"`
 }
 
 func GetServices() []Service {

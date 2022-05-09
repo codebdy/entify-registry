@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"rxdrag.com/entify-schema-registry/authentication/config"
+	"rxdrag.com/entify-schema-registry/config"
 )
 
 func Login(loginName, pwd string) (string, error) {

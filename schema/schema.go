@@ -54,6 +54,12 @@ func CreateSchema() (graphql.Schema, error) {
 				return repository.GetServices(), nil
 			},
 		},
+		"installed": &graphql.Field{
+			Type: graphql.Boolean,
+		},
+		"authenticationService": &graphql.Field{
+			Type: serviceType,
+		},
 	}
 
 	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: fields}

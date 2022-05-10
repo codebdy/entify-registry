@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/consts"
 	"rxdrag.com/entify-schema-registry/repository"
 )
@@ -56,6 +57,9 @@ func CreateSchema() (graphql.Schema, error) {
 		},
 		"installed": &graphql.Field{
 			Type: graphql.Boolean,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return config.GetBoolean(consts.IS_INSTALLED), nil
+			},
 		},
 		"authenticationService": &graphql.Field{
 			Type: serviceType,

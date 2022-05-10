@@ -7,5 +7,5 @@ const (
 	DB_HOST       = "DB_HOST"
 	DB_PORT       = "DB_PORT"
 	DB_SCHEMA     = "DB_SCHEMA"
-	IS_INSTALLED  = "INSTALLED"
+	INSTALLED     = "INSTALLED"
 )

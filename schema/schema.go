@@ -58,7 +58,7 @@ func CreateSchema() (graphql.Schema, error) {
 		"installed": &graphql.Field{
 			Type: graphql.Boolean,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return config.GetBool(consts.IS_INSTALLED), nil
+				return config.GetBool(consts.INSTALLED), nil
 			},
 		},
 		"authenticationService": &graphql.Field{

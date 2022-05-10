@@ -24,7 +24,7 @@ func Init() {
 	c.v.BindEnv(consts.DB_HOST)
 	c.v.BindEnv(consts.DB_PORT)
 	c.v.BindEnv(consts.DB_SCHEMA)
-	c.v.BindEnv(consts.IS_INSTALLED)
+	c.v.BindEnv(consts.INSTALLED)
 }
 
 func GetString(key string) string {

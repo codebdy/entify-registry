@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	"rxdrag.com/entify-schema-registry/config"
+	"rxdrag.com/entify-schema-registry/repository"
 )
 
 func Login(loginName, pwd string) (string, error) {
-	db, err := sql.Open(config.DRIVER_NAME, config.MYSQL_CONFIG)
+	db, err := sql.Open("mysql", repository.DbConfig())
 	defer db.Close()
 	if err != nil {
 		fmt.Println(err)

@@ -8,10 +8,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/graphql-go/handler"
 	"rxdrag.com/entify-schema-registry/authentication"
+	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/schema"
 )
 
 func main() {
+	config.Init()
 	schema, err := schema.CreateSchema()
 	if err != nil {
 		log.Fatalf("failed to create new schema, error: %v", err)

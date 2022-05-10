@@ -1,9 +1,25 @@
 package config
 
-const DRIVER_NAME string = "mysql"
+import "github.com/spf13/viper"
 
-const MYSQL_CONFIG string = "root:RxDragDb@tcp(localhost:3306)/entify-schemas?parseTime=true"
+var theConfig config
 
-const SERVICE_ID uint64 = 1
+type config struct {
+	v *viper.Viper
+}
 
-const TABLE_NAME_MAX_LENGTH = 64
+func Init() {
+
+}
+
+func GetString(key string) string {
+	return ""
+}
+
+func GetBoolean(key string) bool {
+	return false
+}
+
+func SetValue(key string, value interface{}) {
+
+}

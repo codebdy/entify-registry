@@ -2,6 +2,7 @@ package consts
 
 const (
 	CONFIG_PREFIX = "ENTIFY_REGISTRY"
+	DB_DRIVER     = "DB_DRIVER"
 	DB_USER       = "DB_USER"
 	DB_PASSWORD   = "DB_PASSWORD"
 	DB_HOST       = "DB_HOST"

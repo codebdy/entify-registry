@@ -19,6 +19,7 @@ const (
 func Init() {
 	c.v = viper.New()
 	c.v.SetEnvPrefix(consts.CONFIG_PREFIX)
+	c.v.BindEnv(consts.DB_DRIVER)
 	c.v.BindEnv(consts.DB_USER)
 	c.v.BindEnv(consts.DB_PASSWORD)
 	c.v.BindEnv(consts.DB_HOST)

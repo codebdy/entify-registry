@@ -1,6 +1,8 @@
 package config
 
 import (
+	"os"
+
 	"github.com/spf13/viper"
 	"rxdrag.com/entify-schema-registry/consts"
 )
@@ -46,14 +48,14 @@ func GetBool(key string) bool {
 }
 
 func SetString(key string, value string) {
-	c.v.BindEnv(key, value)
+	os.Setenv(consts.DB_CONFIG_PREFIX+"_"+key, value)
 }
 
 func SetBool(key string, value bool) {
 	if value {
-		c.v.BindEnv(key, TRUE)
+		SetString(key, TRUE)
 	} else {
-		c.v.BindEnv(key, FALSE)
+		SetString(key, FALSE)
 	}
 }
 

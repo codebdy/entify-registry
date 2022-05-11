@@ -1,12 +1,12 @@
 package consts
 
 const (
-	CONFIG_PREFIX = "ENTIFY_REGISTRY"
-	DB_DRIVER     = "DB_DRIVER"
-	DB_USER       = "DB_USER"
-	DB_PASSWORD   = "DB_PASSWORD"
-	DB_HOST       = "DB_HOST"
-	DB_PORT       = "DB_PORT"
-	DB_SCHEMA     = "DB_SCHEMA"
-	INSTALLED     = "INSTALLED"
+	DB_CONFIG_PREFIX = "ety_reg_db"
+	DB_DRIVER        = "driver"
+	DB_USER          = "user"
+	DB_PASSWORD      = "password"
+	DB_HOST          = "host"
+	DB_PORT          = "port"
+	DB_SCHEMA        = "schema"
+	INSTALLED        = "installed"
 )

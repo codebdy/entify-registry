@@ -2,9 +2,7 @@ package schema
 
 import (
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/consts"
-	"rxdrag.com/entify-schema-registry/repository"
 )
 
 var serviceType = graphql.NewObject(
@@ -44,29 +42,11 @@ var serviceType = graphql.NewObject(
 )
 
 func CreateSchema() (graphql.Schema, error) {
-	fields := graphql.Fields{
-		"services": &graphql.Field{
-			Type: &graphql.NonNull{
-				OfType: &graphql.List{
-					OfType: serviceType,
-				},
-			},
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return repository.GetServices(), nil
-			},
-		},
-		"installed": &graphql.Field{
-			Type: graphql.Boolean,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return config.GetBool(consts.INSTALLED), nil
-			},
-		},
-		"authenticationService": &graphql.Field{
-			Type: serviceType,
-		},
+	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: queryFields()}
+	rootMutation := graphql.ObjectConfig{Name: "Mutation", Fields: mutationFields()}
+	schemaConfig := graphql.SchemaConfig{
+		Query:    graphql.NewObject(rootQuery),
+		Mutation: graphql.NewObject(rootMutation),
 	}
-
-	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: fields}
-	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
 	return graphql.NewSchema(schemaConfig)
 }

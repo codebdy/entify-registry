@@ -7,6 +7,6 @@ const (
 	DB_PASSWORD      = "password"
 	DB_HOST          = "host"
 	DB_PORT          = "port"
-	DB_SCHEMA        = "schema"
+	DB_DATABASE      = "database"
 	INSTALLED        = "installed"
 )

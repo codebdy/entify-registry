@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"fmt"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/consts"
@@ -19,7 +21,7 @@ var installInputType = graphql.NewInputObject(
 			consts.DB_PORT: &graphql.InputObjectFieldConfig{
 				Type: graphql.String,
 			},
-			consts.DB_SCHEMA: &graphql.InputObjectFieldConfig{
+			consts.DB_DATABASE: &graphql.InputObjectFieldConfig{
 				Type: graphql.String,
 			},
 			consts.DB_USER: &graphql.InputObjectFieldConfig{
@@ -44,6 +46,8 @@ func mutationFields() graphql.Fields {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+
+				fmt.Println("大奶子妹", p.Args)
 				return config.GetBool(consts.INSTALLED), nil
 			},
 		},

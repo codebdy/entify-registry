@@ -13,6 +13,6 @@ func DbConfig() string {
 		config.GetString(consts.DB_PASSWORD),
 		config.GetString(consts.DB_HOST),
 		config.GetString(consts.DB_PORT),
-		config.GetString(consts.DB_SCHEMA),
+		config.GetString(consts.DB_DATABASE),
 	)
 }

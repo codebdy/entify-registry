@@ -27,9 +27,7 @@ func GetServices() []Service {
 }
 
 func Install(cfg config.DbConfig) {
-	fmt.Println("哈哈 not open")
 	db, err := sql.Open(cfg.Driver, DbString(cfg))
-	fmt.Println("哈哈opened")
 	defer db.Close()
 	if err != nil {
 		fmt.Println(err)

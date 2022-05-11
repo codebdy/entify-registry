@@ -1,12 +1,14 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
+	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/consts"
+	"rxdrag.com/entify-schema-registry/repository"
 )
+
+const INPUT = "input"
 
 var installInputType = graphql.NewInputObject(
 	graphql.InputObjectConfig{
@@ -39,15 +41,17 @@ func mutationFields() graphql.Fields {
 		"install": &graphql.Field{
 			Type: graphql.Boolean,
 			Args: graphql.FieldConfigArgument{
-				"input": &graphql.ArgumentConfig{
+				INPUT: &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: installInputType,
 					},
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-
-				fmt.Println("大奶子妹", p.Args)
+				dbConfig := config.DbConfig{}
+				mapstructure.Decode(p.Args[INPUT], &dbConfig)
+				repository.Install(dbConfig)
+				config.SetDbConfig(dbConfig)
 				return config.GetBool(consts.INSTALLED), nil
 			},
 		},

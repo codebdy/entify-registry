@@ -4,15 +4,14 @@ import (
 	"fmt"
 
 	"rxdrag.com/entify-schema-registry/config"
-	"rxdrag.com/entify-schema-registry/consts"
 )
 
-func DbConfig() string {
+func DbString(cfg config.DbConfig) string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		config.GetString(consts.DB_USER),
-		config.GetString(consts.DB_PASSWORD),
-		config.GetString(consts.DB_HOST),
-		config.GetString(consts.DB_PORT),
-		config.GetString(consts.DB_DATABASE),
+		config.GetString(cfg.User),
+		config.GetString(cfg.Password),
+		config.GetString(cfg.Host),
+		config.GetString(cfg.Port),
+		config.GetString(cfg.Database),
 	)
 }

@@ -11,6 +11,15 @@ type config struct {
 	v *viper.Viper
 }
 
+type DbConfig struct {
+	Driver   string `json:"driver"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Database string `json:"database"`
+}
+
 const (
 	TRUE  = "true"
 	FALSE = "false"
@@ -46,4 +55,24 @@ func SetBool(key string, value bool) {
 	} else {
 		c.v.BindEnv(key, FALSE)
 	}
+}
+
+func SetDbConfig(cfg DbConfig) {
+	SetString(consts.DB_DRIVER, cfg.Driver)
+	SetString(consts.DB_DATABASE, cfg.Database)
+	SetString(consts.DB_HOST, cfg.Host)
+	SetString(consts.DB_PORT, cfg.Port)
+	SetString(consts.DB_USER, cfg.User)
+	SetString(consts.DB_PASSWORD, cfg.Password)
+}
+
+func GetDbConfig() DbConfig {
+	var cfg DbConfig
+	cfg.Driver = GetString(consts.DB_DRIVER)
+	cfg.Database = GetString(consts.DB_DATABASE)
+	cfg.Host = GetString(consts.DB_HOST)
+	cfg.Port = GetString(consts.DB_PORT)
+	cfg.User = GetString(consts.DB_USER)
+	cfg.Password = GetString(consts.DB_PASSWORD)
+	return cfg
 }

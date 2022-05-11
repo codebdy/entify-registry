@@ -11,7 +11,7 @@ import (
 )
 
 func Login(loginName, pwd string) (string, error) {
-	db, err := sql.Open(config.GetString(consts.DB_DRIVER), repository.DbConfig())
+	db, err := sql.Open(config.GetString(consts.DB_DRIVER), repository.DbString(config.GetDbConfig()))
 	defer db.Close()
 	if err != nil {
 		fmt.Println(err)

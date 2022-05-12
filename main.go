@@ -12,6 +12,8 @@ import (
 	"rxdrag.com/entify-schema-registry/schema"
 )
 
+const PORT = "8080"
+
 func main() {
 	config.Init()
 	schema, err := schema.CreateSchema()
@@ -29,9 +31,9 @@ func main() {
 			authentication.AuthMiddleware(h),
 		),
 	)
-	fmt.Println("Running a GraphQL API server at http://localhost:8080/graphql")
-	err2 := http.ListenAndServe(":8080", nil)
+	fmt.Println(fmt.Sprintf("Running a GraphQL API server at http://localhost:%s/graphql", PORT))
+	err2 := http.ListenAndServe(":"+PORT, nil)
 	if err2 != nil {
-		fmt.Printf("启动失败:%s", err2)
+		fmt.Printf("Start failure:%s", err2)
 	}
 }

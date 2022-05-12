@@ -1,7 +1,8 @@
 package config
 
 import (
-	"os"
+	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 	"rxdrag.com/entify-schema-registry/consts"
@@ -27,36 +28,47 @@ const (
 	FALSE = "false"
 )
 
+const (
+	PATH        = "."
+	CONFIG_TYPE = "yaml"
+	CONFIG_NAME = "config"
+)
+
 func Init() {
 	c.v = viper.New()
-	c.v.SetEnvPrefix(consts.DB_CONFIG_PREFIX)
-	c.v.BindEnv(consts.DB_DRIVER)
-	c.v.BindEnv(consts.DB_USER)
-	c.v.BindEnv(consts.DB_PASSWORD)
-	c.v.BindEnv(consts.DB_HOST)
-	c.v.BindEnv(consts.DB_PORT)
-	c.v.BindEnv(consts.DB_DATABASE)
-	c.v.BindEnv(consts.INSTALLED)
+	c.v.SetConfigName(CONFIG_NAME) // name of config file (without extension)
+	c.v.SetConfigType(CONFIG_TYPE) // REQUIRED if the config file does not have the extension in the name
+	c.v.AddConfigPath(PATH)
+	err := c.v.ReadInConfig() // Find and read the config file
+	if err != nil {           // Handle errors reading the config file
+		WriteConfig()
+	}
 }
 
 func GetString(key string) string {
-	return c.v.Get(key).(string)
+	return c.v.GetString(key)
 }
 
 func GetBool(key string) bool {
-	return c.v.Get(key) == TRUE
+	return c.v.GetBool(key)
 }
 
 func SetString(key string, value string) {
-	os.Setenv(consts.DB_CONFIG_PREFIX+"_"+key, value)
+	c.v.Set(key, value)
 }
 
 func SetBool(key string, value bool) {
-	if value {
-		SetString(key, TRUE)
-	} else {
-		SetString(key, FALSE)
+	c.v.Set(key, value)
+}
+
+func WriteConfig() {
+	filePath := filepath.Join(PATH, CONFIG_NAME+"."+CONFIG_TYPE)
+	err := c.v.WriteConfigAs(filePath)
+	if err != nil {
+		fmt.Println(err)
+		panic(err.Error())
 	}
+	fmt.Println("Can find config file and create:" + filePath)
 }
 
 func SetDbConfig(cfg DbConfig) {

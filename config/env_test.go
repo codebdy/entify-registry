@@ -13,3 +13,10 @@ func TestSetString(t *testing.T) {
 		t.Error("Error SetString,expected 'test_value', but is:" + GetString(consts.DB_DRIVER))
 	}
 }
+
+func TestGetString(t *testing.T) {
+	Init()
+	if GetString(consts.DB_DRIVER) != "mysql" {
+		t.Error("Getstring Error:" + GetString(consts.DB_DRIVER))
+	}
+}

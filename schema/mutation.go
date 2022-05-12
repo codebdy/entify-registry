@@ -53,6 +53,7 @@ func mutationFields() graphql.Fields {
 				repository.Install(dbConfig)
 				config.SetDbConfig(dbConfig)
 				config.SetBool(consts.INSTALLED, true)
+				config.WriteConfig()
 				return config.GetBool(consts.INSTALLED), nil
 			},
 		},

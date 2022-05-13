@@ -34,7 +34,7 @@ const (
 	CONFIG_NAME = "config"
 )
 
-func Init() {
+func init() {
 	c.v = viper.New()
 	c.v.SetConfigName(CONFIG_NAME) // name of config file (without extension)
 	c.v.SetConfigType(CONFIG_TYPE) // REQUIRED if the config file does not have the extension in the name

@@ -7,7 +7,6 @@ import (
 )
 
 func TestDbString(t *testing.T) {
-	config.Init()
 	dbConfig := config.DbConfig{
 		Driver:   "mysql",
 		Host:     "127.0.0.1",

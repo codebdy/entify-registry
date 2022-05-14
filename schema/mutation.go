@@ -15,7 +15,9 @@ var serviceInputType = graphql.NewInputObject(
 		Name: "ServiceInput",
 		Fields: graphql.InputObjectConfigFieldMap{
 			consts.ID: &graphql.InputObjectFieldConfig{
-				Type: graphql.Int,
+				Type: &graphql.NonNull{
+					OfType: graphql.Int,
+				},
 			},
 			consts.URL: &graphql.InputObjectFieldConfig{
 				Type: graphql.String,
@@ -35,19 +37,29 @@ var installInputType = graphql.NewInputObject(
 		Name: "InstallInput",
 		Fields: graphql.InputObjectConfigFieldMap{
 			consts.DB_DRIVER: &graphql.InputObjectFieldConfig{
-				Type: graphql.String,
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 			consts.DB_HOST: &graphql.InputObjectFieldConfig{
-				Type: graphql.String,
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 			consts.DB_PORT: &graphql.InputObjectFieldConfig{
-				Type: graphql.String,
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 			consts.DB_DATABASE: &graphql.InputObjectFieldConfig{
-				Type: graphql.String,
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 			consts.DB_USER: &graphql.InputObjectFieldConfig{
-				Type: graphql.String,
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 			consts.DB_PASSWORD: &graphql.InputObjectFieldConfig{
 				Type: graphql.String,

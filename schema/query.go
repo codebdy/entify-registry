@@ -27,6 +27,9 @@ func queryFields() graphql.Fields {
 		},
 		"authenticationService": &graphql.Field{
 			Type: serviceType,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return repository.GetAuthService(), nil
+			},
 		},
 	}
 }

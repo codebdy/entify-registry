@@ -21,15 +21,24 @@ type Service struct {
 	UpdatedTime time.Time `json:"updatedTime"`
 }
 
+var openedDB *sql.DB
+
 func openDb() *sql.DB {
+	if openedDB != nil {
+		return openedDB
+	}
 	cfg := config.GetDbConfig()
-	db, err := sql.Open(cfg.Driver, DbString(cfg))
+	openedDB, err := sql.Open(cfg.Driver, DbString(cfg))
+
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
 
-	return db
+	openedDB.SetMaxOpenConns(10)
+	openedDB.SetMaxIdleConns(5)
+
+	return openedDB
 }
 
 var fieldStr = `
@@ -60,10 +69,10 @@ func serviceScanValues(service *Service) []interface{} {
 func GetServices() []Service {
 	var services = []Service{}
 	db := openDb()
-	defer db.Close()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services `, fieldStr)
 
 	rows, err := db.Query(sqlStr)
+	defer rows.Close()
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -108,7 +117,6 @@ func Install(cfg config.DbConfig) {
 
 func AddService(service Service) {
 	db := openDb()
-	defer db.Close()
 
 	sqlStr := `
 	INSERT INTO services
@@ -144,7 +152,6 @@ func AddService(service Service) {
 
 func UpdateService(service Service) {
 	db := openDb()
-	defer db.Close()
 
 	sqlStr := `
 		UPDATE services
@@ -177,7 +184,6 @@ func UpdateService(service Service) {
 
 func RemoveService(id int) {
 	db := openDb()
-	defer db.Close()
 
 	sqlStr := `
 		DELETE FROM services
@@ -194,7 +200,6 @@ func RemoveService(id int) {
 func GetService(id int) Service {
 	var service Service
 	db := openDb()
-	defer db.Close()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE id = ?`, fieldStr)
 
 	db.QueryRow(sqlStr, id).Scan(serviceScanValues(&service)...)
@@ -205,7 +210,6 @@ func GetService(id int) Service {
 func GetAuthService() Service {
 	var service Service
 	db := openDb()
-	defer db.Close()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
 
 	db.QueryRow(sqlStr, consts.AUTH_SERVICE).Scan(serviceScanValues(&service)...)

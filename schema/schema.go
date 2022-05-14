@@ -10,7 +10,9 @@ var serviceType = graphql.NewObject(
 		Name: "Service",
 		Fields: graphql.Fields{
 			consts.ID: &graphql.Field{
-				Type: graphql.Int,
+				Type: &graphql.NonNull{
+					OfType: graphql.Int,
+				},
 			},
 			consts.NAME: &graphql.Field{
 				Type: graphql.String,

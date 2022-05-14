@@ -9,7 +9,7 @@ import (
 )
 
 type Service struct {
-	Id          uint      `json:"id"`
+	Id          int       `json:"id"`
 	Name        string    `json:"name"`
 	Url         string    `json:"url"`
 	ServiceType string    `json:"serviceType"`
@@ -54,4 +54,22 @@ func Install(cfg config.DbConfig) {
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func AddService(service Service) {
+
+}
+
+func UpdateService(service Service) {
+
+}
+
+func RemoveService(id int) {
+
+}
+
+func GetService(id int) Service {
+	var service Service
+
+	return service
 }

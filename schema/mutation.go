@@ -86,6 +86,12 @@ func mutationFields() graphql.Fields {
 					},
 				},
 			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				service := repository.Service{}
+				mapstructure.Decode(p.Args[INPUT], &service)
+				repository.AddService(service)
+				return repository.GetService(service.Id), nil
+			},
 		},
 		"removeService": &graphql.Field{
 			Type: serviceType,
@@ -96,6 +102,13 @@ func mutationFields() graphql.Fields {
 					},
 				},
 			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				service := repository.Service{}
+				mapstructure.Decode(p.Args[INPUT], &service)
+				oldService := repository.GetService(service.Id)
+				repository.RemoveService(service.Id)
+				return oldService, nil
+			},
 		},
 		"updateService": &graphql.Field{
 			Type: serviceType,
@@ -105,6 +118,12 @@ func mutationFields() graphql.Fields {
 						OfType: serviceInputType,
 					},
 				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				service := repository.Service{}
+				mapstructure.Decode(p.Args[INPUT], &service)
+				repository.UpdateService(service)
+				return repository.GetService(service.Id), nil
 			},
 		},
 	}

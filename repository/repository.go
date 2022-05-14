@@ -44,6 +44,19 @@ var fieldStr = `
 			updatedTime
 	`
 
+func serviceScanValues(service *Service) []interface{} {
+	return []interface{}{
+		&service.Id,
+		&service.Name,
+		&service.ServiceType,
+		&service.TypeDefs,
+		&service.Version,
+		&service.IsAlive,
+		&service.AddedTime,
+		&service.UpdatedTime,
+	}
+}
+
 func GetServices() []Service {
 	var services = []Service{}
 	db := openDb()
@@ -57,16 +70,7 @@ func GetServices() []Service {
 	}
 	for rows.Next() {
 		var service Service
-		err = rows.Scan(
-			&service.Id,
-			&service.Name,
-			&service.ServiceType,
-			&service.TypeDefs,
-			&service.Version,
-			&service.IsAlive,
-			&service.AddedTime,
-			&service.UpdatedTime,
-		)
+		err = rows.Scan(serviceScanValues(&service)...)
 		services = append(services, service)
 	}
 	return services
@@ -193,16 +197,7 @@ func GetService(id int) Service {
 	defer db.Close()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE id = ?`, fieldStr)
 
-	db.QueryRow(sqlStr, id).Scan(
-		&service.Id,
-		&service.Name,
-		&service.ServiceType,
-		&service.TypeDefs,
-		&service.Version,
-		&service.IsAlive,
-		&service.AddedTime,
-		&service.UpdatedTime,
-	)
+	db.QueryRow(sqlStr, id).Scan(serviceScanValues(&service)...)
 	return service
 
 }
@@ -213,15 +208,6 @@ func GetAuthService() Service {
 	defer db.Close()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
 
-	db.QueryRow(sqlStr, consts.AUTH_SERVICE).Scan(
-		&service.Id,
-		&service.Name,
-		&service.ServiceType,
-		&service.TypeDefs,
-		&service.Version,
-		&service.IsAlive,
-		&service.AddedTime,
-		&service.UpdatedTime,
-	)
+	db.QueryRow(sqlStr, consts.AUTH_SERVICE).Scan(serviceScanValues(&service)...)
 	return service
 }

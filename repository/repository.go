@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"rxdrag.com/entify-schema-registry/config"
+	"rxdrag.com/entify-schema-registry/consts"
 )
 
 type Service struct {
@@ -20,9 +21,54 @@ type Service struct {
 	UpdatedTime time.Time `json:"updatedTime"`
 }
 
+func openDb() *sql.DB {
+	cfg := config.GetDbConfig()
+	db, err := sql.Open(cfg.Driver, DbString(cfg))
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	return db
+}
+
+var fieldStr = `
+			id,
+			url,
+			name,
+			serviceType,
+			typeDefs,
+			version,
+			isAlive,
+			addedTime,
+			updatedTime
+	`
+
 func GetServices() []Service {
 	var services = []Service{}
+	db := openDb()
+	defer db.Close()
+	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services `, fieldStr)
 
+	rows, err := db.Query(sqlStr)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	for rows.Next() {
+		var service Service
+		err = rows.Scan(
+			&service.Id,
+			&service.Name,
+			&service.ServiceType,
+			&service.TypeDefs,
+			&service.Version,
+			&service.IsAlive,
+			&service.AddedTime,
+			&service.UpdatedTime,
+		)
+		services = append(services, service)
+	}
 	return services
 }
 
@@ -34,7 +80,7 @@ func Install(cfg config.DbConfig) {
 		panic(err)
 	}
 
-	sql := `CREATE TABLE services (
+	sqlStr := `CREATE TABLE services (
 		id int unsigned NOT NULL,
 		url varchar(500) NOT NULL,
 		name varchar(500) DEFAULT NULL,
@@ -47,29 +93,135 @@ func Install(cfg config.DbConfig) {
 		PRIMARY KEY (id),
 		UNIQUE KEY id_UNIQUE (id),
 		UNIQUE KEY url_UNIQUE (url)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 	`
 
-	_, err = db.Exec(sql)
+	_, err = db.Exec(sqlStr)
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
 func AddService(service Service) {
+	db := openDb()
+	defer db.Close()
 
+	sqlStr := `
+	INSERT INTO services
+		(id,
+		url,
+		name,
+		serviceType,
+		typeDefs,
+		version,
+		isAlive,
+		addedTime,
+		updatedTime)
+		VALUES
+		(?,?,?,?,?,?,?,?,?)
+	`
+
+	_, err := db.Exec(sqlStr,
+		service.Id,
+		service.Url,
+		service.Name,
+		service.ServiceType,
+		service.TypeDefs,
+		service.Version,
+		service.IsAlive,
+		time.Now(),
+		time.Now(),
+	)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 }
 
 func UpdateService(service Service) {
+	db := openDb()
+	defer db.Close()
 
+	sqlStr := `
+		UPDATE services
+		SET
+		url = ?,
+		name = ?,
+		serviceType = ?,
+		typeDefs = ?,
+		version = ?,
+		isAlive = ?,
+		updatedTime = ?
+		WHERE id = ?
+	`
+
+	_, err := db.Exec(sqlStr,
+		service.Url,
+		service.Name,
+		service.ServiceType,
+		service.TypeDefs,
+		service.Version,
+		service.IsAlive,
+		time.Now(),
+		service.Id,
+	)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 }
 
 func RemoveService(id int) {
+	db := openDb()
+	defer db.Close()
 
+	sqlStr := `
+		DELETE FROM services
+		WHERE id = ?;
+	`
+
+	_, err := db.Exec(sqlStr, id)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 }
 
 func GetService(id int) Service {
 	var service Service
+	db := openDb()
+	defer db.Close()
+	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE id = ?`, fieldStr)
 
+	db.QueryRow(sqlStr, id).Scan(
+		&service.Id,
+		&service.Name,
+		&service.ServiceType,
+		&service.TypeDefs,
+		&service.Version,
+		&service.IsAlive,
+		&service.AddedTime,
+		&service.UpdatedTime,
+	)
+	return service
+
+}
+
+func GetAuthService() Service {
+	var service Service
+	db := openDb()
+	defer db.Close()
+	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
+
+	db.QueryRow(sqlStr, consts.AUTH_SERVICE).Scan(
+		&service.Id,
+		&service.Name,
+		&service.ServiceType,
+		&service.TypeDefs,
+		&service.Version,
+		&service.IsAlive,
+		&service.AddedTime,
+		&service.UpdatedTime,
+	)
 	return service
 }

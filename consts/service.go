@@ -11,3 +11,8 @@ var (
 	ADDED_TIME   = "addedTime"
 	UPDATED_TIME = "updatedTime"
 )
+
+const (
+	NORMAL_SERVICE = "normal"
+	AUTH_SERVICE   = "auth"
+)

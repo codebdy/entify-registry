@@ -10,6 +10,26 @@ import (
 
 const INPUT = "input"
 
+var serviceInputType = graphql.NewInputObject(
+	graphql.InputObjectConfig{
+		Name: "ServiceInput",
+		Fields: graphql.InputObjectConfigFieldMap{
+			consts.ID: &graphql.InputObjectFieldConfig{
+				Type: graphql.Int,
+			},
+			consts.URL: &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+			consts.NAME: &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+			consts.SERVICETYPE: &graphql.InputObjectFieldConfig{
+				Type: graphql.String,
+			},
+		},
+	},
+)
+
 var installInputType = graphql.NewInputObject(
 	graphql.InputObjectConfig{
 		Name: "InstallInput",
@@ -55,6 +75,36 @@ func mutationFields() graphql.Fields {
 				config.SetBool(consts.INSTALLED, true)
 				config.WriteConfig()
 				return config.GetBool(consts.INSTALLED), nil
+			},
+		},
+		"addService": &graphql.Field{
+			Type: serviceType,
+			Args: graphql.FieldConfigArgument{
+				INPUT: &graphql.ArgumentConfig{
+					Type: &graphql.NonNull{
+						OfType: serviceInputType,
+					},
+				},
+			},
+		},
+		"removeService": &graphql.Field{
+			Type: serviceType,
+			Args: graphql.FieldConfigArgument{
+				consts.ID: &graphql.ArgumentConfig{
+					Type: &graphql.NonNull{
+						OfType: graphql.Int,
+					},
+				},
+			},
+		},
+		"updateService": &graphql.Field{
+			Type: serviceType,
+			Args: graphql.FieldConfigArgument{
+				INPUT: &graphql.ArgumentConfig{
+					Type: &graphql.NonNull{
+						OfType: serviceInputType,
+					},
+				},
 			},
 		},
 	}

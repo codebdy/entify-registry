@@ -212,6 +212,6 @@ func GetAuthService() Service {
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
 
-	db.QueryRow(sqlStr, consts.AUTH_SERVICE).Scan(serviceScanValues(&service)...)
+	db.QueryRow(sqlStr, consts.ENTIFY_AUTH_SERVICE).Scan(serviceScanValues(&service)...)
 	return service
 }

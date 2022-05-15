@@ -13,6 +13,8 @@ var (
 )
 
 const (
-	NORMAL_SERVICE = "normal"
-	AUTH_SERVICE   = "auth"
+	ENTIFY_SERVICE      = "entify"
+	ENTIFY_AUTH_SERVICE = "entifyAuth"
+	OTHER_GQL_SERVICE   = "otherGQL"
+	OTHER_AUTH_SERVICE  = "otherAuth"
 )

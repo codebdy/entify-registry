@@ -6,6 +6,7 @@ import (
 	"rxdrag.com/entify-schema-registry/config"
 	"rxdrag.com/entify-schema-registry/consts"
 	"rxdrag.com/entify-schema-registry/repository"
+	"rxdrag.com/entify-schema-registry/utils"
 )
 
 const INPUT = "input"
@@ -80,6 +81,7 @@ func mutationFields() graphql.Fields {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
 				dbConfig := config.DbConfig{}
 				mapstructure.Decode(p.Args[INPUT], &dbConfig)
 				repository.Install(dbConfig)
@@ -99,6 +101,7 @@ func mutationFields() graphql.Fields {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
 				repository.AddService(service)
@@ -115,6 +118,7 @@ func mutationFields() graphql.Fields {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
 				oldService := repository.GetService(service.Id)
@@ -132,6 +136,7 @@ func mutationFields() graphql.Fields {
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
 				repository.UpdateService(service)

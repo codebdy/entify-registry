@@ -32,8 +32,13 @@ func queryFields() graphql.Fields {
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				defer utils.PrintErrorStack()
-				services := repository.GetServices()
 				datas := []map[string]interface{}{}
+				installed := config.GetBool(consts.INSTALLED)
+				if !installed {
+					return datas, nil
+				}
+
+				services := repository.GetServices()
 				for i := range services {
 					datas = append(datas, covertService(services[i]))
 				}
@@ -57,9 +62,10 @@ func queryFields() graphql.Fields {
 			),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				defer utils.PrintErrorStack()
+				installed := config.GetBool(consts.INSTALLED)
 				return map[string]interface{}{
-					consts.INSTALLED:      config.GetBool(consts.INSTALLED),
-					consts.AUTH_INSTALLED: repository.GetAuthService() != nil,
+					consts.INSTALLED:      installed,
+					consts.AUTH_INSTALLED: installed && repository.GetAuthService() != nil,
 				}, nil
 			},
 		},

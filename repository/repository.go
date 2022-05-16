@@ -207,11 +207,17 @@ func GetService(id int) Service {
 
 }
 
-func GetAuthService() Service {
+func GetAuthService() *Service {
 	var service Service
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
 
-	db.QueryRow(sqlStr, consts.ENTIFY_AUTH_SERVICE).Scan(serviceScanValues(&service)...)
-	return service
+	err := db.QueryRow(sqlStr, consts.ENTIFY_AUTH_SERVICE).Scan(serviceScanValues(&service)...)
+	switch {
+	case err == sql.ErrNoRows:
+		return nil
+	case err != nil:
+		panic(err.Error())
+	}
+	return &service
 }

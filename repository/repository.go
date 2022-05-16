@@ -10,15 +10,15 @@ import (
 )
 
 type Service struct {
-	Id          int       `json:"id"`
-	Name        string    `json:"name"`
-	Url         string    `json:"url"`
-	ServiceType string    `json:"serviceType"`
-	TypeDefs    string    `json:"tpeDefs"`
-	IsAlive     bool      `json:"isAlive"`
-	Version     string    `json:"version"`
-	AddedTime   time.Time `json:"addedTime"`
-	UpdatedTime time.Time `json:"updatedTime"`
+	Id          int            `json:"id"`
+	Name        string         `json:"name"`
+	Url         string         `json:"url"`
+	ServiceType sql.NullString `json:"serviceType"`
+	TypeDefs    sql.NullString `json:"typeDefs"`
+	IsAlive     sql.NullBool   `json:"isAlive"`
+	Version     sql.NullString `json:"version"`
+	AddedTime   sql.NullTime   `json:"addedTime"`
+	UpdatedTime sql.NullTime   `json:"updatedTime"`
 }
 
 var openedDB *sql.DB
@@ -56,6 +56,7 @@ var fieldStr = `
 func serviceScanValues(service *Service) []interface{} {
 	return []interface{}{
 		&service.Id,
+		&service.Url,
 		&service.Name,
 		&service.ServiceType,
 		&service.TypeDefs,
@@ -66,8 +67,8 @@ func serviceScanValues(service *Service) []interface{} {
 	}
 }
 
-func GetServices() []Service {
-	var services = []Service{}
+func GetServices() []*Service {
+	var services = []*Service{}
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services `, fieldStr)
 
@@ -80,7 +81,7 @@ func GetServices() []Service {
 	for rows.Next() {
 		var service Service
 		err = rows.Scan(serviceScanValues(&service)...)
-		services = append(services, service)
+		services = append(services, &service)
 	}
 	return services
 }
@@ -101,7 +102,7 @@ func Install(cfg config.DbConfig) {
 		typeDefs longtext,
 		version varchar(100) DEFAULT NULL,
 		isAlive tinyint(1) DEFAULT NULL,
-		addedTime varchar(45) DEFAULT NULL,
+		addedTime datetime DEFAULT NULL,
 		updatedTime datetime DEFAULT NULL,
 		PRIMARY KEY (id),
 		UNIQUE KEY id_UNIQUE (id),

@@ -105,7 +105,7 @@ func mutationFields() graphql.Fields {
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
 				repository.AddService(service)
-				return repository.GetService(service.Id), nil
+				return covertService(repository.GetService(service.Id)), nil
 			},
 		},
 		"removeService": &graphql.Field{
@@ -123,7 +123,7 @@ func mutationFields() graphql.Fields {
 				mapstructure.Decode(p.Args[INPUT], &service)
 				oldService := repository.GetService(service.Id)
 				repository.RemoveService(service.Id)
-				return oldService, nil
+				return covertService(oldService), nil
 			},
 		},
 		"updateService": &graphql.Field{
@@ -140,7 +140,7 @@ func mutationFields() graphql.Fields {
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
 				repository.UpdateService(service)
-				return repository.GetService(service.Id), nil
+				return covertService(repository.GetService(service.Id)), nil
 			},
 		},
 	}

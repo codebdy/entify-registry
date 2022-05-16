@@ -198,13 +198,13 @@ func RemoveService(id int) {
 	}
 }
 
-func GetService(id int) Service {
+func GetService(id int) *Service {
 	var service Service
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE id = ?`, fieldStr)
 
 	db.QueryRow(sqlStr, id).Scan(serviceScanValues(&service)...)
-	return service
+	return &service
 
 }
 

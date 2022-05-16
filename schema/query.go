@@ -40,11 +40,27 @@ func queryFields() graphql.Fields {
 				return datas, nil
 			},
 		},
-		"installed": &graphql.Field{
-			Type: graphql.Boolean,
+		"status": &graphql.Field{
+			Type: graphql.NewObject(
+				graphql.ObjectConfig{
+					Name: "ServiceStatus",
+					Fields: graphql.Fields{
+						consts.INSTALLED: &graphql.Field{
+							Type: graphql.Boolean,
+						},
+						consts.AUTH_INSTALLED: &graphql.Field{
+							Type: graphql.Boolean,
+						},
+					},
+					Description: "Service status",
+				},
+			),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				defer utils.PrintErrorStack()
-				return config.GetBool(consts.INSTALLED), nil
+				return map[string]interface{}{
+					consts.INSTALLED:      config.GetBool(consts.INSTALLED),
+					consts.AUTH_INSTALLED: repository.GetAuthService() != nil,
+				}, nil
 			},
 		},
 		"authenticationService": &graphql.Field{

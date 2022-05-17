@@ -10,15 +10,41 @@ import (
 )
 
 type Service struct {
-	Id          int            `json:"id"`
-	Name        string         `json:"name"`
-	Url         string         `json:"url"`
-	ServiceType sql.NullString `json:"serviceType"`
-	TypeDefs    sql.NullString `json:"typeDefs"`
-	IsAlive     sql.NullBool   `json:"isAlive"`
-	Version     sql.NullString `json:"version"`
-	AddedTime   sql.NullTime   `json:"addedTime"`
-	UpdatedTime sql.NullTime   `json:"updatedTime"`
+	Id          int       `json:"id"`
+	Name        string    `json:"name"`
+	Url         string    `json:"url"`
+	ServiceType string    `json:"serviceType"`
+	TypeDefs    string    `json:"typeDefs"`
+	IsAlive     bool      `json:"isAlive"`
+	Version     string    `json:"version"`
+	AddedTime   time.Time `json:"addedTime"`
+	UpdatedTime time.Time `json:"updatedTime"`
+}
+
+type ServiceOutput struct {
+	Id          int
+	Name        string
+	Url         string
+	ServiceType sql.NullString
+	TypeDefs    sql.NullString
+	IsAlive     sql.NullBool
+	Version     sql.NullString
+	AddedTime   sql.NullTime
+	UpdatedTime sql.NullTime
+}
+
+func (service ServiceOutput) covertService() *Service {
+	return &Service{
+		Id:          service.Id,
+		Name:        service.Name,
+		Url:         service.Url,
+		ServiceType: service.ServiceType.String,
+		TypeDefs:    service.TypeDefs.String,
+		IsAlive:     service.IsAlive.Bool,
+		Version:     service.Version.String,
+		AddedTime:   service.AddedTime.Time,
+		UpdatedTime: service.UpdatedTime.Time,
+	}
 }
 
 var openedDB *sql.DB
@@ -53,7 +79,7 @@ var fieldStr = `
 			updatedTime
 	`
 
-func serviceScanValues(service *Service) []interface{} {
+func serviceScanValues(service *ServiceOutput) []interface{} {
 	return []interface{}{
 		&service.Id,
 		&service.Url,
@@ -79,9 +105,9 @@ func GetServices() []*Service {
 		panic(err)
 	}
 	for rows.Next() {
-		var service Service
+		var service ServiceOutput
 		err = rows.Scan(serviceScanValues(&service)...)
-		services = append(services, &service)
+		services = append(services, service.covertService())
 	}
 	return services
 }
@@ -199,17 +225,25 @@ func RemoveService(id int) {
 }
 
 func GetService(id int) *Service {
-	var service Service
+	var service ServiceOutput
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE id = ?`, fieldStr)
 
-	db.QueryRow(sqlStr, id).Scan(serviceScanValues(&service)...)
-	return &service
+	err := db.QueryRow(sqlStr, id).Scan(serviceScanValues(&service)...)
+
+	switch {
+	case err == sql.ErrNoRows:
+		return nil
+	case err != nil:
+		panic(err.Error())
+	}
+
+	return service.covertService()
 
 }
 
 func GetAuthService() *Service {
-	var service Service
+	var service ServiceOutput
 	db := openDb()
 	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
 
@@ -220,5 +254,5 @@ func GetAuthService() *Service {
 	case err != nil:
 		panic(err.Error())
 	}
-	return &service
+	return service.covertService()
 }

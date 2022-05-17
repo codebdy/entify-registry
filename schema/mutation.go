@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify-schema-registry/config"
@@ -106,7 +104,6 @@ func mutationFields() graphql.Fields {
 				defer utils.PrintErrorStack()
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
-				fmt.Println(service)
 				repository.AddService(service)
 				return repository.GetService(service.Id), nil
 			},

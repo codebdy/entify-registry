@@ -15,9 +15,7 @@ var serviceInputType = graphql.NewInputObject(
 		Name: "ServiceInput",
 		Fields: graphql.InputObjectConfigFieldMap{
 			consts.ID: &graphql.InputObjectFieldConfig{
-				Type: &graphql.NonNull{
-					OfType: graphql.Int,
-				},
+				Type: graphql.Int,
 			},
 			consts.URL: &graphql.InputObjectFieldConfig{
 				Type: graphql.String,

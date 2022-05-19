@@ -112,7 +112,26 @@ func GetServices() []*Service {
 	return services
 }
 
-func Install(cfg config.DbConfig) {
+func IsInstalled() bool {
+	sqlStr := fmt.Sprintf(
+		"SELECT COUNT(*) FROM information_schema.TABLES WHERE table_name ='services' AND table_schema ='%s'",
+		config.GetDbConfig().Database,
+	)
+	db := openDb()
+
+	var count int
+	err := db.QueryRow(sqlStr).Scan(&count)
+	switch {
+	case err == sql.ErrNoRows:
+		return false
+	case err != nil:
+		panic(err.Error())
+	}
+	return count > 0
+}
+
+func Install() {
+	cfg := config.GetDbConfig()
 	db, err := sql.Open(cfg.Driver, DbString(cfg))
 	defer db.Close()
 	if err != nil {

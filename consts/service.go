@@ -11,10 +11,3 @@ var (
 	ADDED_TIME   = "addedTime"
 	UPDATED_TIME = "updatedTime"
 )
-
-const (
-	ENTIFY_SERVICE      = "entify"
-	ENTIFY_AUTH_SERVICE = "entifyAuth"
-	OTHER_GQL_SERVICE   = "otherGQL"
-	OTHER_AUTH_SERVICE  = "otherAuth"
-)

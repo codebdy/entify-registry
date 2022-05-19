@@ -6,14 +6,12 @@ import (
 	"time"
 
 	"rxdrag.com/entify-schema-registry/config"
-	"rxdrag.com/entify-schema-registry/consts"
 )
 
 type Service struct {
 	Id          int       `json:"id"`
 	Name        string    `json:"name"`
 	Url         string    `json:"url"`
-	ServiceType string    `json:"serviceType"`
 	TypeDefs    string    `json:"typeDefs"`
 	IsAlive     bool      `json:"isAlive"`
 	Version     string    `json:"version"`
@@ -35,10 +33,8 @@ type ServiceOutput struct {
 
 func (service ServiceOutput) covertService() *Service {
 	return &Service{
-		Id:          service.Id,
 		Name:        service.Name,
 		Url:         service.Url,
-		ServiceType: service.ServiceType.String,
 		TypeDefs:    service.TypeDefs.String,
 		IsAlive:     service.IsAlive.Bool,
 		Version:     service.Version.String,
@@ -71,7 +67,6 @@ var fieldStr = `
 			id,
 			url,
 			name,
-			serviceType,
 			typeDefs,
 			version,
 			isAlive,
@@ -81,10 +76,8 @@ var fieldStr = `
 
 func serviceScanValues(service *ServiceOutput) []interface{} {
 	return []interface{}{
-		&service.Id,
 		&service.Url,
 		&service.Name,
-		&service.ServiceType,
 		&service.TypeDefs,
 		&service.Version,
 		&service.IsAlive,
@@ -140,10 +133,9 @@ func Install() {
 	}
 
 	sqlStr := `CREATE TABLE services (
-		id int unsigned NOT NULL,
+		id int unsigned NOT NULL AUTO_INCREMENT,
 		url varchar(500) NOT NULL,
 		name varchar(500) DEFAULT NULL,
-		serviceType varchar(100) DEFAULT NULL,
 		typeDefs longtext,
 		version varchar(100) DEFAULT NULL,
 		isAlive tinyint(1) DEFAULT NULL,
@@ -166,24 +158,20 @@ func AddService(service Service) {
 
 	sqlStr := `
 	INSERT INTO services
-		(id,
-		url,
+		(url,
 		name,
-		serviceType,
 		typeDefs,
 		version,
 		isAlive,
 		addedTime,
 		updatedTime)
 		VALUES
-		(?,?,?,?,?,?,?,?,?)
+		(?,?,,?,?,?,?,?,?)
 	`
 
 	_, err := db.Exec(sqlStr,
-		service.Id,
 		service.Url,
 		service.Name,
-		service.ServiceType,
 		service.TypeDefs,
 		service.Version,
 		service.IsAlive,
@@ -204,7 +192,6 @@ func UpdateService(service Service) {
 		SET
 		url = ?,
 		name = ?,
-		serviceType = ?,
 		typeDefs = ?,
 		version = ?,
 		isAlive = ?,
@@ -215,7 +202,6 @@ func UpdateService(service Service) {
 	_, err := db.Exec(sqlStr,
 		service.Url,
 		service.Name,
-		service.ServiceType,
 		service.TypeDefs,
 		service.Version,
 		service.IsAlive,
@@ -259,19 +245,4 @@ func GetService(id int) *Service {
 
 	return service.covertService()
 
-}
-
-func GetAuthService() *Service {
-	var service ServiceOutput
-	db := openDb()
-	sqlStr := fmt.Sprintf(`	SELECT %s	FROM services WHERE serviceType = ?`, fieldStr)
-
-	err := db.QueryRow(sqlStr, consts.ENTIFY_AUTH_SERVICE).Scan(serviceScanValues(&service)...)
-	switch {
-	case err == sql.ErrNoRows:
-		return nil
-	case err != nil:
-		panic(err.Error())
-	}
-	return service.covertService()
 }

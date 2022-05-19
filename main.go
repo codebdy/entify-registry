@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/graphql-go/handler"
-	"rxdrag.com/entify-schema-registry/authentication"
+	"rxdrag.com/entify-schema-registry/middleware"
 	"rxdrag.com/entify-schema-registry/repository"
 	"rxdrag.com/entify-schema-registry/schema"
 )
@@ -32,8 +32,8 @@ func main() {
 	})
 
 	http.Handle("/graphql",
-		authentication.CorsMiddleware(
-			authentication.AuthMiddleware(h),
+		middleware.CorsMiddleware(
+			middleware.AuthMiddleware(h),
 		),
 	)
 	fmt.Println(fmt.Sprintf("Running a GraphQL API server at http://localhost:%s/graphql", PORT))

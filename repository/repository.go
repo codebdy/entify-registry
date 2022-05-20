@@ -230,7 +230,6 @@ func RemoveService(id int) {
 		DELETE FROM services
 		WHERE id = ?;
 	`
-
 	_, err := db.Exec(sqlStr, id)
 	if err != nil {
 		fmt.Println(err)

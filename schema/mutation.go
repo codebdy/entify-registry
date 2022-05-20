@@ -59,10 +59,9 @@ func mutationFields() graphql.Fields {
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				defer utils.PrintErrorStack()
-				service := repository.Service{}
-				mapstructure.Decode(p.Args[INPUT], &service)
-				oldService := repository.GetService(service.Id)
-				repository.RemoveService(service.Id)
+				id := p.Args[consts.ID].(int)
+				oldService := repository.GetService(id)
+				repository.RemoveService(id)
 				return oldService, nil
 			},
 		},

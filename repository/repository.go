@@ -33,6 +33,7 @@ type ServiceOutput struct {
 
 func (service ServiceOutput) covertService() *Service {
 	return &Service{
+		Id:          service.Id,
 		Name:        service.Name,
 		Url:         service.Url,
 		TypeDefs:    service.TypeDefs.String,

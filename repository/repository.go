@@ -76,6 +76,7 @@ var fieldStr = `
 
 func serviceScanValues(service *ServiceOutput) []interface{} {
 	return []interface{}{
+		&service.Id,
 		&service.Url,
 		&service.Name,
 		&service.TypeDefs,
@@ -102,6 +103,7 @@ func GetServices() []*Service {
 		err = rows.Scan(serviceScanValues(&service)...)
 		services = append(services, service.covertService())
 	}
+
 	return services
 }
 

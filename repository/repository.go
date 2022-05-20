@@ -166,7 +166,7 @@ func AddService(service Service) {
 		addedTime,
 		updatedTime)
 		VALUES
-		(?,?,?,?,?,?,?,?)
+		(?,?,?,?,?,?,?)
 	`
 
 	_, err := db.Exec(sqlStr,

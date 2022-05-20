@@ -155,7 +155,7 @@ func Install() {
 	}
 }
 
-func AddService(service Service) {
+func AddService(service Service) *Service {
 	db := openDb()
 
 	sqlStr := `
@@ -171,7 +171,7 @@ func AddService(service Service) {
 		(?,?,?,?,?,?,?)
 	`
 
-	_, err := db.Exec(sqlStr,
+	result, err := db.Exec(sqlStr,
 		service.Url,
 		service.Name,
 		service.TypeDefs,
@@ -184,6 +184,12 @@ func AddService(service Service) {
 		fmt.Println(err)
 		panic(err)
 	}
+	insertId, err := result.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	return GetService(int(insertId))
 }
 
 func UpdateService(service Service) {

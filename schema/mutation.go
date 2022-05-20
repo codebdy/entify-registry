@@ -45,8 +45,7 @@ func mutationFields() graphql.Fields {
 				defer utils.PrintErrorStack()
 				service := repository.Service{}
 				mapstructure.Decode(p.Args[INPUT], &service)
-				repository.AddService(service)
-				return repository.GetService(service.Id), nil
+				return repository.AddService(service), nil
 			},
 		},
 		"removeService": &graphql.Field{

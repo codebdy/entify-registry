@@ -9,3 +9,5 @@ const (
 	DB_DATABASE = "database"
 	AUTH_URL    = "auth_url"
 )
+
+const TOKEN = "token"

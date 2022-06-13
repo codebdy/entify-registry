@@ -21,3 +21,6 @@
 go.work
 
 config.yaml
+
+.vscode
+node_modules

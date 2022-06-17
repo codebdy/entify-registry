@@ -3,6 +3,7 @@ const { ApolloGateway, IntrospectAndCompose } = require("@apollo/gateway");
 const { readFileSync } = require("fs");
 import { GraphQLClient } from "graphql-request";
 
+var services
 const port = 8081;
 const gqlstr = `
   query{
@@ -15,7 +16,7 @@ const gqlstr = `
 `;
 
 const graphQLClient = new GraphQLClient(
-  "https://localhost:8080/grahpql",
+  "http://localhost:8080/graphql",
   {
     mode: "cors",
   }
@@ -24,29 +25,25 @@ graphQLClient
   .request(gqlstr)
   .then((data) => {
     if (data) {
-      console.log(data);
+      services = data["services"]
+      const gateway = new ApolloGateway({
+        supergraphSdl: new IntrospectAndCompose({
+          subgraphs:services,
+        }),
+      });
+    
+      // Pass the ApolloGateway to the ApolloServer constructor
+      const server = new ApolloServer({
+        gateway,
+      });
+    
+      server.listen({ port }).then(({ url }) => {
+        console.log(`🚀 Server ready at ${url}`);
+      });
     }
   })
   .catch((err) => {
     console.error(err);
+    return
   });
-// Initialize an ApolloGateway instance and pass it
-// the supergraph schema as a string
-const gateway = new ApolloGateway({
-  supergraphSdl: new IntrospectAndCompose({
-    subgraphs: [
-      { name: "accounts", url: "http://localhost:4000/graphql" },
-      // { name: "products", url: "http://localhost:4002" },
-      // ...additional subgraphs...
-    ],
-  }),
-});
 
-// Pass the ApolloGateway to the ApolloServer constructor
-const server = new ApolloServer({
-  gateway,
-});
-
-server.listen({ port }).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});

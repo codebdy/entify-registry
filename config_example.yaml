@@ -1,0 +1,8 @@
+database: database_name
+driver: mysql
+host: host_name
+service_id: 1
+password: your password
+port: "3306"
+user: user_name
+auth_url: "http://localhost:4000/graphql"
